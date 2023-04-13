@@ -1,28 +1,6 @@
-import MeetupList from '../components/meetups/MeetupList'
+import { MongoClient } from 'mongodb'
 
-const DUMMY_MEETUPS = [
-  {
-    id: 'm1',
-    title: 'First Meetup',
-    image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/d/d3/Stadtbild_M%C3%BCnchen.jpg/1280px-Stadtbild_M%C3%BCnchen.jpg',
-    address: '123 City Center, Munich, Germany',
-    description: 'This is the description',
-  },
-  {
-    id: 'm2',
-    title: 'Second Meetup',
-    image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/d/d3/Stadtbild_M%C3%BCnchen.jpg/1280px-Stadtbild_M%C3%BCnchen.jpg',
-    address: '456 City Center, Munich, Germany',
-    description: 'This is the description',
-  },
-  {
-    id: 'm3',
-    title: 'Third Meetup',
-    image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/d/d3/Stadtbild_M%C3%BCnchen.jpg/1280px-Stadtbild_M%C3%BCnchen.jpg',
-    address: '789 City Center, Munich, Germany',
-    description: 'This is the description',
-  },
-]
+import MeetupList from '../components/meetups/MeetupList'
 
 const HomePage = (props) => {
   return (
@@ -39,9 +17,25 @@ const HomePage = (props) => {
 
 export async function getStaticProps() {
   // fetch data from an API
+  const client = await MongoClient.connect('mongodb+srv://jameshudson0357:X3O56tkC0LyjxGLH@cluster0.rduh66w.mongodb.net/meetups?retryWrites=true&w=majority')
+  const db = client.db()
+  const meetupsCollection = db.collection('meetups')
+
+  // use meetupsCollection to find all the documents in that collection
+  // convert to an array to get array of documents (like our dummy data)
+  const meetups = await meetupsCollection.find().toArray()
+
+  client.close()
+
   return {
     props: {
-      meetups: DUMMY_MEETUPS
+      // need to use .map() to transform every meetup (specifically the id)
+      meetups: meetups.map(meetup => ({
+        title: meetup.title,
+        address: meetup.address,
+        image: meetup.image,
+        id: meetup._id.toString()
+      }))
     },
     revalidate: 10
   }

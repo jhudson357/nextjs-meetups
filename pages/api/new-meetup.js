@@ -12,9 +12,9 @@ async function handler(req, res) {
   if (req.method === 'POST') {
     const data = req.body
 
+    // this code is reusable wherever you want to establish a database connection
     const client = await MongoClient.connect('mongodb+srv://jameshudson0357:X3O56tkC0LyjxGLH@cluster0.rduh66w.mongodb.net/meetups?retryWrites=true&w=majority')
     const db = client.db()
-
     const meetupsCollection = db.collection('meetups')
     
     // insert one new document into this collection
