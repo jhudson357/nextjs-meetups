@@ -24,10 +24,23 @@ const DUMMY_MEETUPS = [
   },
 ]
 
-const HomePage = () => {
+const HomePage = (props) => {
   return (
-    <MeetupList meetups={DUMMY_MEETUPS}/>
+    <MeetupList meetups={props.meetups}/>
   )
+}
+
+// add this for data fetching when pre-rendering
+// calls getStaticProps BEFORE it calls the component function
+// this code is executed in the build process
+// this code will NEVER execute on the user's machine
+export async function getStaticProps() {
+  // fetch data from an API
+  return {
+    props: {
+      meetups: DUMMY_MEETUPS
+    }
+  }
 }
 
 export default HomePage
