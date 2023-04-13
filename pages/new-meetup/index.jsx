@@ -1,5 +1,5 @@
 // our-domain.com/new-meetup
-
+import Head from 'next/head'
 import { useRouter } from 'next/router'
 
 import NewMeetupForm from '../../components/meetups/NewMeetupForm'
@@ -26,7 +26,13 @@ const router = useRouter()  //use to reroute after submitting the form
   }
   
   return (
-    <NewMeetupForm onAddMeetup={addMeetupHandler}/>
+    <>
+      <Head>
+        <title>Add New Meetup</title>
+        <meta name='description' content='Add a new meetup for new networking opportunities.'/>
+      </Head>
+      <NewMeetupForm onAddMeetup={addMeetupHandler}/>
+    </>
   )
 }
 
