@@ -33,7 +33,9 @@ export async function getStaticPaths() {
   
   return {
     // fallback key tells NextJS whether your paths array contains all supported parameter values or just some of them (false = all, true = not all paths are pre-generated so if user goes to one (i.e. m4), then the server will pre-generate the missing ones dynamically when requests for them are coming in)
-    fallback: false,
+    // when fallback is set to true or 'blocking', the list of paths might not be exhaustive (might be more pages). Will not return a 404 page if it can't find the specified page immediately. It will then generate the page on demand and then cache it.
+    // Difference bw true and 'blocking': for true, it would immediately return an empty page and then pull down the dynamically generated content once that's done (need to handle the case that the pg doesnt have the data yet). With 'blocking', the user will not see anything until the page was pre-generated and the finished page will be served.
+    fallback: 'blocking',
     paths: meetups.map(meetup => ({
       params: { meetupId: meetup._id.toString() },
     }))
